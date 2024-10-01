@@ -1,37 +1,62 @@
-# PCSM
 
-#### 介绍
-POINT-CALIBRATED SPECTRAL NEURAL OPERATORS
+# Code for PCSM
 
-#### 软件架构
-软件架构说明
+We provide the experimental code for Darcy Flow, Navier-Stokes, Airfoil and Plasticity.
+Additional code will be provided in next version.
 
+## Environment Installation
 
-#### 安装教程
+Create and activate an Anaconda Environment:
+```
+conda create -n PCSM python=3.8
+conda activate PCSM
+```
 
-1.  xxxx
-2.  xxxx
-3.  xxxx
+Install required packages with following commands:
+```
+pip install -r requirement.txt
+```
 
-#### 使用说明
+## Data Preparation
 
-1.  xxxx
-2.  xxxx
-3.  xxxx
+Download the dataset from following links, and then unzip them in specific directory.
+- Darcy Flow: [Google Driver](https://drive.google.com/file/d/1Z1uxG9R8AdAGJprG5STcphysjm56_0Jf/view?usp=sharing)
+- Navier-Stokes: [Google Driver](https://drive.google.com/file/d/1lVgpWMjv9Z6LEv3eZQ_Qgj54lYeqnGl5/view?usp=sharing)
+- Airfoil: [Google Driver](https://drive.google.com/drive/folders/1JUkPbx0-lgjFHPURH_kp1uqjfRn3aw9-?usp=sharing)
+- Plasticity: [Google Driver](https://drive.google.com/file/d/14CPGK_ljae5c6dm2nRraY2kIDt39JX3d/view?usp=sharing)
 
-#### 参与贡献
+## Experiment Running 
 
-1.  Fork 本仓库
-2.  新建 Feat_xxx 分支
-3.  提交代码
-4.  新建 Pull Request
+Run the experiments with following scripts.
 
+- Darcy Flow: 
+```
+bash ./exp_scripts/darcy.sh [The Directory of Downloaded Data] 
+# The Provided Directory should be like: XXX/Darcy
+```
 
-#### 特技
+- Navier-Stokes:
+```
+bash ./exp_scripts/darcy.sh [The Directory of Downloaded Data]
+# The Provided Directory should be like: XXX/NavierStokes
+```
 
-1.  使用 Readme\_XXX.md 来支持不同的语言，例如 Readme\_en.md, Readme\_zh.md
-2.  Gitee 官方博客 [blog.gitee.com](https://blog.gitee.com)
-3.  你可以 [https://gitee.com/explore](https://gitee.com/explore) 这个地址来了解 Gitee 上的优秀开源项目
-4.  [GVP](https://gitee.com/gvp) 全称是 Gitee 最有价值开源项目，是综合评定出的优秀开源项目
-5.  Gitee 官方提供的使用手册 [https://gitee.com/help](https://gitee.com/help)
-6.  Gitee 封面人物是一档用来展示 Gitee 会员风采的栏目 [https://gitee.com/gitee-stars/](https://gitee.com/gitee-stars/)
+- Airfoil:
+```
+bash ./exp_scripts/ns.sh [The Directory of Downloaded Data]
+# The Provided Directory should be like: XXX/naca
+```
+
+- Plasticity:
+```
+bash ./exp_scripts/plasticity.sh [The Directory of Downloaded Data]
+# The Provided Directory should be like: XXX/plasticity
+```
+
+## Acknowledge
+
+We thank following open-sourced projects, which provide the basis of this work.
+- https://github.com/neuraloperator/neuraloperator
+- https://github.com/gengxiangc/NORM
+- https://github.com/thuml/Transolver
+- https://github.com/nmwsharp/nonmanifold-laplacian
