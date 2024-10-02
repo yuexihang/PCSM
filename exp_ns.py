@@ -17,7 +17,6 @@ parser.add_argument('--n-hidden', type=int, default=64, help='hidden dim')
 parser.add_argument('--n-layers', type=int, default=3, help='layers')
 parser.add_argument('--n-heads', type=int, default=4)
 parser.add_argument('--batch-size', type=int, default=8)
-parser.add_argument("--gpu", type=str, default='0', help="GPU index to use")
 parser.add_argument('--max_grad_norm', type=float, default=None)
 parser.add_argument('--downsample', type=int, default=1)
 parser.add_argument('--mlp_ratio', type=int, default=1)
@@ -27,12 +26,11 @@ parser.add_argument('--ref', type=int, default=8)
 parser.add_argument('--freq_num', type=int, default=32)
 parser.add_argument('--eval', type=int, default=0)
 parser.add_argument('--ntrain', type=int, default=1000)
-parser.add_argument('--save_name', type=str, default='ns_2d_UniPDE')
+parser.add_argument('--save_name', type=str, default='PCSM')
 parser.add_argument('--data_path', type=str, default='/data/fno')
 
 args = parser.parse_args()
 
-os.environ["CUDA_VISIBLE_DEVICES"] = args.gpu
 data_path = args.data_path + '/NavierStokes_V1e-5_N1200_T20.mat'
 ntrain = args.ntrain
 ntest = 200
@@ -40,7 +38,7 @@ T_in = 10
 T = 10
 step = 1
 eval = args.eval
-save_name = args.save_name  # + f'_DetIndex-{os.environ.get("DET_EXPERIMENT_ID")}'
+save_name = args.save_name  
 print(f"Save Name: {save_name}")
 
 def count_parameters(model):
@@ -118,18 +116,18 @@ def main():
 
         for x, fx, yy in train_loader:
             loss = 0
-            x, fx, yy = x.cuda(), fx.cuda(), yy.cuda()  # x: B,4096,2    fx: B,4096,T   y: B,4096,T
+            x, fx, yy = x.cuda(), fx.cuda(), yy.cuda()  
             bsz = x.shape[0]
 
             for t in range(0, T, step):
                 y = yy[..., t:t + step]
-                im = model(x, fx=fx)  # B , 4096 , 1
+                im = model(x, fx=fx) 
                 loss += myloss(im.reshape(bsz, -1), y.reshape(bsz, -1))
                 if t == 0:
                     pred = im
                 else:
                     pred = torch.cat((pred, im), -1)
-                fx = torch.cat((fx[..., step:], y), dim=-1)  # detach() & groundtruth
+                fx = torch.cat((fx[..., step:], y), dim=-1) 
 
             train_l2_step += loss.item()
             train_l2_full += myloss(pred.reshape(bsz, -1), yy.reshape(bsz, -1)).item()
@@ -148,7 +146,7 @@ def main():
         with torch.no_grad():
             for x, fx, yy in test_loader:
                 loss = 0
-                x, fx, yy = x.cuda(), fx.cuda(), yy.cuda()  # x : B, 4096, 2  fx : B, 4096  y : B, 4096, T
+                x, fx, yy = x.cuda(), fx.cuda(), yy.cuda()  
                 bsz = x.shape[0]
                 for t in range(0, T, step):
                     y = yy[..., t:t + step]

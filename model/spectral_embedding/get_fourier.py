@@ -42,8 +42,6 @@ def edges_to_adj(edges, points, t = 1, use_distance = False):
 
     return a
 
-# def distance( p1, p2 ):
-#     return sqrt( ( p1[0] - p2[0] ) **2 + ( p1[1] - p2[1] ) ** 2  )
 
 def degree_matrix(A):
     degrees = np.array(A.sum(1)).flatten()
@@ -53,17 +51,6 @@ def degree_matrix(A):
         D = np.diag(degrees)
     return D
 
-# def laplacian(A):
-#     return degree_matrix(A) - A
-
-# def get_fourier(adj, k=100):
-#     l = laplacian(adj)
-#     _, u = sp.linalg.eigsh(l, k=k, which="SM")
-#     # _, u = sp.linalg.eigsh(l, k=k)
-#     n = l.shape[0]
-#     u *= np.sqrt(n)
-
-#     return u
 
 def laplacian_new(A):
     deg = degree_matrix(A)
@@ -72,7 +59,6 @@ def laplacian_new(A):
 def get_fourier_new(adj, k=100, which="LM"):
     deg, lap = laplacian_new(adj)
     _, u = sp.linalg.eigsh(lap, k=k, M=deg , which=which)
-    # _, u = sp.linalg.eigsh(l, k=k)
     n = lap.shape[0]
     u *= np.sqrt(n)
 
@@ -93,10 +79,8 @@ def grid2spectral(grid_shape, k = 20, which="LM"):
             nextr = (r+1) % xlen
             if c + 1 < ylen:
                 edges.append( [ IDX[r,c], IDX[ r, c+1 ] ] )
-                # edges.append( [ IDX[r,c], IDX[ nextr, c+1 ] ] )
             if r + 1 < xlen:
                 edges.append( [ IDX[r,c], IDX[ r+1, c ]  ] )
-            # edges.append( [ IDX[r,c], IDX[ nextr, c ]  ] )
     edges = np.array( edges )
 
 

@@ -1,8 +1,8 @@
 
 # Code for PCSM
 
-We provide the experimental code for Darcy Flow, Navier-Stokes, Airfoil and Plasticity.
-Additional code will be provided in next version.
+We provide the experimental code for Darcy Flow, Navier-Stokes, Airfoil, and Plasticity.
+Additional code will be provided in the next version.
 
 ## Environment Installation
 
@@ -12,14 +12,14 @@ conda create -n PCSM python=3.8
 conda activate PCSM
 ```
 
-Install required packages with following commands:
+Install required packages with the following commands:
 ```
 pip install -r requirement.txt
 ```
 
 ## Data Preparation
 
-Download the dataset from following links, and then unzip them in specific directory.
+Download the dataset from the following links, and then unzip them in a specific directory.
 - Darcy Flow: [Google Driver](https://drive.google.com/file/d/1Z1uxG9R8AdAGJprG5STcphysjm56_0Jf/view?usp=sharing)
 - Navier-Stokes: [Google Driver](https://drive.google.com/file/d/1lVgpWMjv9Z6LEv3eZQ_Qgj54lYeqnGl5/view?usp=sharing)
 - Airfoil: [Google Driver](https://drive.google.com/drive/folders/1JUkPbx0-lgjFHPURH_kp1uqjfRn3aw9-?usp=sharing)
@@ -27,7 +27,7 @@ Download the dataset from following links, and then unzip them in specific direc
 
 ## Experiment Running 
 
-Run the experiments with following scripts.
+Run the experiments with the following scripts.
 
 - Darcy Flow: 
 ```
@@ -38,7 +38,7 @@ bash ./exp_scripts/darcy.sh [The Directory of Downloaded Data]
 - Navier-Stokes:
 ```
 bash ./exp_scripts/darcy.sh [The Directory of Downloaded Data]
-# The Provided Directory should be like: XXX/NavierStokes
+# The Provided Directory should be like: XXX/Navier-Stokes
 ```
 
 - Airfoil:
@@ -55,7 +55,7 @@ bash ./exp_scripts/plasticity.sh [The Directory of Downloaded Data]
 
 ## Acknowledge
 
-We thank following open-sourced projects, which provide the basis of this work.
+We thank the following open-sourced projects, which provide the basis of this work.
 - https://github.com/neuraloperator/neuraloperator
 - https://github.com/gengxiangc/NORM
 - https://github.com/thuml/Transolver

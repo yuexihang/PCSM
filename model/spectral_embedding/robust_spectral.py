@@ -1,7 +1,5 @@
 import robust_laplacian
-# from plyfile import PlyData
 import numpy as np
-# import polyscope as ps
 import scipy.sparse.linalg as sla
 import torch
 
@@ -58,14 +56,12 @@ def grid_spectral_meshes(H, W, k, which='LM'):
                 faces.append( [ IDX[r,c], IDX[r+1,c+1], IDX[r+1,  c] ] )
     faces = np.array(faces)
 
-    # L, M = robust_laplacian.point_cloud_laplacian(points)
     L, M = robust_laplacian.mesh_laplacian(points, faces)
     evals, evecs = sla.eigsh(L, k, M, sigma=1e-8, which=which)
     return torch.from_numpy(evecs).float()
 
 
 def points_spectral_2d( points, n_neighbors = 30 , k = 100, return_values = False):
-    # points: N, 2
     points = np.concatenate( [points, np.zeros( (points.shape[0], 1) ) ], axis=1 ) # N, 3
     L, M = robust_laplacian.point_cloud_laplacian(points, n_neighbors=n_neighbors)
     evals, evecs = sla.eigsh(L, k, M, sigma=1e-8)

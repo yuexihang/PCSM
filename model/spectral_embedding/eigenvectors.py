@@ -40,10 +40,8 @@ def compute_alignment(u1, u2):
 
 def align_eigenvectors_kl(u_ref, u_test):
     switch = []
-    # Take care of first eigv manually
     switch.append(np.sign(u_ref[0, 0]) != np.sign(u_test[0, 0]))
 
-    # Take care of other eigv
     for k in range(1, u_ref.shape[-1]):
         ref = u_ref[:, k]
         test = u_test[:, k]

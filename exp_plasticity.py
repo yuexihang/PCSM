@@ -18,7 +18,6 @@ parser.add_argument('--n-hidden', type=int, default=64, help='hidden dim')
 parser.add_argument('--n-layers', type=int, default=3, help='layers')
 parser.add_argument('--n-heads', type=int, default=4)
 parser.add_argument('--batch-size', type=int, default=8)
-parser.add_argument("--gpu", type=str, default='0', help="GPU index to use")
 parser.add_argument('--max_grad_norm', type=float, default=None)
 parser.add_argument('--downsamplex', type=int, default=1)
 parser.add_argument('--downsampley', type=int, default=1)
@@ -29,14 +28,13 @@ parser.add_argument('--ref', type=int, default=8)
 parser.add_argument('--freq_num', type=int, default=32)
 parser.add_argument('--eval', type=int, default=0)
 parser.add_argument('--save_name', type=str, default='PCSM')
-parser.add_argument('--data_path', type=str, default='/data/fno/plas_N987_T20.mat')
+parser.add_argument('--data_path', type=str, default='/data/fno')
 parser.add_argument('--ntrain', type=int, default=900)
 args = parser.parse_args()
 eval = args.eval
 save_name = args.save_name
 print(f"Save Name: {save_name}")
 
-os.environ["CUDA_VISIBLE_DEVICES"] = args.gpu
 
 def count_parameters(model):
     total_params = 0
@@ -173,7 +171,7 @@ def main():
 
             for t in range(T):
                 y = yy[..., t:t + 1]
-                input_T = tim[:, t:t + 1].reshape(bsz, 1)  # B,step
+                input_T = tim[:, t:t + 1].reshape(bsz, 1) 
                 im = model(x, fx, T=input_T)
 
                 loss = myloss(im.reshape(bsz, -1), y.reshape(bsz, -1))

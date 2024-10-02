@@ -16,7 +16,6 @@ parser.add_argument('--n-hidden', type=int, default=64, help='hidden dim')
 parser.add_argument('--n-layers', type=int, default=3, help='layers')
 parser.add_argument('--n-heads', type=int, default=4)
 parser.add_argument('--batch-size', type=int, default=8)
-parser.add_argument("--gpu", type=str, default='0', help="GPU index to use")
 parser.add_argument('--max_grad_norm', type=float, default=None)
 parser.add_argument('--downsamplex', type=int, default=1)
 parser.add_argument('--downsampley', type=int, default=1)
@@ -31,10 +30,8 @@ parser.add_argument('--data_path', type=str, default='/data/fno/airfoil/naca')
 parser.add_argument('--ntrain', type=int, default=1000)
 args = parser.parse_args()
 eval = args.eval
-save_name = args.save_name # + f'_DetIndex-{os.environ.get("DET_EXPERIMENT_ID")}'
+save_name = args.save_name 
 print(f"Save Name: {save_name}")
-
-os.environ["CUDA_VISIBLE_DEVICES"] = args.gpu
 
 def count_parameters(model):
     total_params = 0
@@ -118,7 +115,7 @@ def main():
 
         for pos, fx, y in train_loader:
 
-            x, fx, y = pos.cuda(), fx.cuda(), y.cuda()  # x:B,N,2  fx:B,N,2  y:B,N
+            x, fx, y = pos.cuda(), fx.cuda(), y.cuda() 
             optimizer.zero_grad()
             out = model(x, None).squeeze(-1)
             loss = myloss(out, y)

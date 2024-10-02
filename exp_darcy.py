@@ -21,7 +21,6 @@ parser.add_argument('--n-hidden', type=int, default=64)
 parser.add_argument('--n-layers', type=int, default=3)
 parser.add_argument('--n-heads', type=int, default=4)
 parser.add_argument('--batch-size', type=int, default=8)
-parser.add_argument("--gpu", type=str, default='0')
 parser.add_argument('--max_grad_norm', type=float, default=None)
 parser.add_argument('--downsample', type=int, default=5)
 parser.add_argument('--mlp_ratio', type=int, default=1)
@@ -36,7 +35,6 @@ parser.add_argument('--data_path', type=str, default='/data/fno')
 parser.add_argument('--const_training_loss', type=int, default=0)
 args = parser.parse_args()
 
-os.environ["CUDA_VISIBLE_DEVICES"] = args.gpu
 
 train_path = args.data_path + '/piececonst_r421_N1024_smooth1.mat'
 test_path  = args.data_path + '/piececonst_r421_N1024_smooth2.mat'
@@ -61,9 +59,9 @@ def count_parameters(model):
 
 def central_diff(x: torch.Tensor, h, resolution):
     x = rearrange(x, 'b (h w) c -> b h w c', h=resolution, w=resolution)
-    x = F.pad(x, (0, 0, 1, 1, 1, 1), mode='constant', value=0.)     # [b c t h+2 w+2]
-    grad_x = (x[:, 1:-1, 2:, :] - x[:, 1:-1, :-2, :]) / (2 * h)  # f(x+h) - f(x-h) / 2h
-    grad_y = (x[:, 2:, 1:-1, :] - x[:, :-2, 1:-1, :]) / (2 * h)  # f(x+h) - f(x-h) / 2h
+    x = F.pad(x, (0, 0, 1, 1, 1, 1), mode='constant', value=0.)  
+    grad_x = (x[:, 1:-1, 2:, :] - x[:, 1:-1, :-2, :]) / (2 * h)  
+    grad_y = (x[:, 2:, 1:-1, :] - x[:, :-2, 1:-1, :]) / (2 * h)  
 
     return grad_x, grad_y
 
@@ -146,7 +144,7 @@ def main():
             x, fx, y = x.cuda(), fx.cuda(), y.cuda()
             optimizer.zero_grad()
 
-            out = model(x, fx=fx.unsqueeze(-1)).squeeze(-1)  # B, N , 2, fx: B, N, y: B, N
+            out = model(x, fx=fx.unsqueeze(-1)).squeeze(-1) 
             out = y_normalizer.decode(out)
             y = y_normalizer.decode(y)
 

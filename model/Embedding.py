@@ -16,8 +16,8 @@ class RotaryEmbedding(nn.Module):
         # coordinates [b, n]
         t = coordinates.to(device).type_as(self.inv_freq)
         t = t * (self.scale / self.min_freq)
-        freqs = torch.einsum('... i , j -> ... i j', t, self.inv_freq)  # [b, n, d//2]
-        return torch.cat((freqs, freqs), dim=-1)  # [b, n, d]
+        freqs = torch.einsum('... i , j -> ... i j', t, self.inv_freq) 
+        return torch.cat((freqs, freqs), dim=-1)  
 
 
 def rotate_half(x):
@@ -31,9 +31,6 @@ def apply_rotary_pos_emb(t, freqs):
 
 
 def apply_2d_rotary_pos_emb(t, freqs_x, freqs_y):
-    # split t into first half and second half
-    # t: [b, h, n, d]
-    # freq_x/y: [b, n, d]
     d = t.shape[-1]
     t_x, t_y = t[..., :d // 2], t[..., d // 2:]
 
@@ -42,13 +39,11 @@ def apply_2d_rotary_pos_emb(t, freqs_x, freqs_y):
 
 
 class PositionalEncoding(nn.Module):
-    "Implement the PE function."
 
     def __init__(self, d_model, dropout, max_len=421 * 421):
         super(PositionalEncoding, self).__init__()
         self.dropout = nn.Dropout(p=dropout)
 
-        # Compute the positional encodings once in log space.
         pe = torch.zeros(max_len, d_model)
         position = torch.arange(0, max_len).unsqueeze(1)
         div_term = torch.exp(
@@ -81,34 +76,18 @@ class RelativePositionalEncoder(nn.Module):
         return embeddings
 
 class PositionalEmbedding(nn.Module):
-    """
-    compute sinusoid encoding.
-    """
     def __init__(self, d_model, max_len, requires_grad=False, sparse = 1):
-        """
-        constructor of sinusoid encoding class
-
-        :param d_model: dimension of model
-        :param max_len: max sequence length
-        :param device: hardware device setting
-        """
         super(PositionalEmbedding, self).__init__()
 
-        # same size with input matrix (for adding with input matrix)
         self.encoding = torch.zeros(max_len, d_model)
-        # self.encoding.requires_grad = False  # we don't need to compute gradient
 
         pos = torch.arange(0, max_len)
         pos = pos.float().unsqueeze(dim=1)
-        # 1D => 2D unsqueeze to represent word's position
 
         _2i = torch.arange(0, d_model, step=2).float()
-        # 'i' means index of d_model (e.g. embedding size = 50, 'i' = [0,50])
-        # "step=2" means 'i' multiplied with two (same with 2 * i)
 
         self.encoding[:, 0::2] = torch.sin(pos / (10000 ** (_2i / d_model)))
         self.encoding[:, 1::2] = torch.cos(pos / (10000 ** (_2i / d_model)))
-        # compute positional encoding to consider positional information of words
 
         self.sparse = sparse
 
@@ -120,14 +99,6 @@ class PositionalEmbedding(nn.Module):
 
 
 def timestep_embedding(timesteps, dim, max_period=10000, repeat_only=False):
-    """
-    Create sinusoidal timestep embeddings.
-    :param timesteps: a 1-D Tensor of N indices, one per batch element.
-                      These may be fractional.
-    :param dim: the dimension of the output.
-    :param max_period: controls the minimum frequency of the embeddings.
-    :return: an [N x dim] Tensor of positional embeddings.
-    """
 
     half = dim // 2
     freqs = torch.exp(
